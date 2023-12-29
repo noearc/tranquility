@@ -1,0 +1,393 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>Reference</title>
+    <link rel="stylesheet" href="../ldoc.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>ldoc</h1>
+
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Functions">Functions</a></li>
+</ul>
+
+
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/control.html">control</a></li>
+  <li><a href="../modules/link_clock.html">link_clock</a></li>
+  <li><a href="../modules/tranquility.mini.grammar.html">tranquility.mini.grammar</a></li>
+  <li><a href="../modules/tranquility.mini.html">tranquility.mini</a></li>
+  <li><a href="../modules/tranquility.mini.visitor.html">tranquility.mini.visitor</a></li>
+  <li><strong>tranquility.pattern</strong></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Module <code>tranquility.pattern</code></h1>
+<p>Query haps inside the given time span</p>
+<p></p>
+
+
+<h2><a href="#Functions">Functions</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Pattern:onsetsOnly">Pattern:onsetsOnly ()</a></td>
+	<td class="summary">Returns a new pattern, with all haps without onsets filtered out.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Pattern:filterEvents">Pattern:filterEvents (function)</a></td>
+	<td class="summary">Returns a new Pattern, which only returns haps that meet the given test.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Pattern:splitQueries">Pattern:splitQueries ()</a></td>
+	<td class="summary">Returns a new pattern, with queries split at cycle boundaries.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Pattern:withQuerySpan">Pattern:withQuerySpan (function)</a></td>
+	<td class="summary">Returns a new pattern, where the given function is applied to the query timespan before passing it to the original pattern.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Pattern:withQueryTime">Pattern:withQueryTime (function)</a></td>
+	<td class="summary">As with {@link Pattern#withQuerySpan}, but the function is applied to both the begin and end time of the query timespan.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Pattern:withEventTime">Pattern:withEventTime (func)</a></td>
+	<td class="summary">As with {@link Pattern#withHapSpan}, but the function is applied to both the begin and end time of the hap timespans.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Pattern:outerJoin">Pattern:outerJoin ()</a></td>
+	<td class="summary">Flattens a pattern of patterns into a pattern, where wholes are taken from inner haps.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Pattern:withValue">Pattern:withValue (func)</a></td>
+	<td class="summary">Returns a new pattern, with the function applied to the value of each event.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Slowcat">Slowcat (pats)</a></td>
+	<td class="summary">Concatenation: combines a list of patterns, switching between them successively, one per cycle.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Pattern:compress">Pattern:compress (b, e)</a></td>
+	<td class="summary">Compress each cycle into the given timespan, leaving a gap</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#fastGap">fastGap (factor)</a></td>
+	<td class="summary">speeds up a pattern like fast, but rather than it playing multiple times as fast would it instead leaves a gap in the remaining space of the cycle.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Pattern:onsetsOnly"></a>
+    <strong>Pattern:onsetsOnly ()</strong>
+    </dt>
+    <dd>
+    Returns a new pattern, with all haps without onsets filtered out.  A hap with an onset is one with a `whole` timespan that begins at the same time as its `part` timespan
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Pattern
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Pattern:filterEvents"></a>
+    <strong>Pattern:filterEvents (function)</strong>
+    </dt>
+    <dd>
+    Returns a new Pattern, which only returns haps that meet the given test.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">function</span>
+            <span class="types"><span class="type">function</span></span>
+         which returns false for haps to be removed from the pattern
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Pattern
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Pattern:splitQueries"></a>
+    <strong>Pattern:splitQueries ()</strong>
+    </dt>
+    <dd>
+    Returns a new pattern, with queries split at cycle boundaries.  This makes some calculations easier to express, as all haps are then constrained to happen within a cycle.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Pattern
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Pattern:withQuerySpan"></a>
+    <strong>Pattern:withQuerySpan (function)</strong>
+    </dt>
+    <dd>
+    Returns a new pattern, where the given function is applied to the query timespan before passing it to the original pattern.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">function</span>
+            <span class="types"><span class="type">Function</span></span>
+         to apply
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">Pattern</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Pattern:withQueryTime"></a>
+    <strong>Pattern:withQueryTime (function)</strong>
+    </dt>
+    <dd>
+    As with {@link Pattern#withQuerySpan}, but the function is applied to both the begin and end time of the query timespan.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">function</span>
+            <span class="types"><span class="type">Function</span></span>
+         to apply
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Pattern
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Pattern:withEventTime"></a>
+    <strong>Pattern:withEventTime (func)</strong>
+    </dt>
+    <dd>
+    As with {@link Pattern#withHapSpan}, but the function is applied to both the begin and end time of the hap timespans.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">func</span>
+            <span class="types"><span class="type">Function</span></span>
+         the function to apply
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        Pattern
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Pattern:outerJoin"></a>
+    <strong>Pattern:outerJoin ()</strong>
+    </dt>
+    <dd>
+    Flattens a pattern of patterns into a pattern, where wholes are taken from inner haps.
+
+
+
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Pattern:withValue"></a>
+    <strong>Pattern:withValue (func)</strong>
+    </dt>
+    <dd>
+    Returns a new pattern, with the function applied to the value of each event.  synonyms fmap
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">func</span>
+            <span class="types"><span class="type">function</span></span>
+         to apply to the value
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">pattern</span></span>
+
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Slowcat"></a>
+    <strong>Slowcat (pats)</strong>
+    </dt>
+    <dd>
+    Concatenation: combines a list of patterns, switching between them successively, one per cycle.  synonyms: {@link cat}
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">pats</span>
+
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+        {Pattern}
+    </ol>
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="function-name">slowcat</span>(<span class="string">"e5"</span>, <span class="string">"b4"</span>, [<span class="string">"d5"</span>, <span class="string">"c5"</span>])</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "Pattern:compress"></a>
+    <strong>Pattern:compress (b, e)</strong>
+    </dt>
+    <dd>
+    Compress each cycle into the given timespan, leaving a gap
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">b</span>
+
+        </li>
+        <li><span class="parameter">e</span>
+
+        </li>
+    </ul>
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="function-name">cat</span>(
+  <span class="function-name">s</span>(<span class="string">"bd sd"</span>).<span class="function-name">compress</span>(.<span class="number">25</span>,.<span class="number">75</span>),
+  <span class="function-name">s</span>(<span class="string">"~ bd sd ~"</span>)
+)</pre>
+    </ul>
+
+</dd>
+    <dt>
+    <a name = "fastGap"></a>
+    <strong>fastGap (factor)</strong>
+    </dt>
+    <dd>
+    speeds up a pattern like fast, but rather than it playing multiple times as fast would it instead leaves a gap in the remaining space of the cycle.  For example, the following will play the sound pattern "bd sn" only once but compressed into the first half of the cycle, i.e. twice as fast. synonyms fastgap
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">factor</span>
+            <span class="types"><span class="type">number</span></span>
+         of fast
+        </li>
+    </ul>
+
+
+
+
+    <h3>Usage:</h3>
+    <ul>
+        <pre class="example"><span class="function-name">s</span>(<span class="string">"bd sd"</span>).<span class="function-name">fastGap</span>(<span class="number">2</span>)</pre>
+    </ul>
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/lunarmodules/LDoc">LDoc 1.5.0</a></i>
+<i style="float:right;">Last updated 2023-12-30 00:45:26 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>

@@ -14,15 +14,23 @@ Copyright (C) 2023 David Minnix
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]
---
+
+--- defines the PEG grammar for parsing mini-notation
+-- @module pattern
+
 require("math")
 require("tranquility.state")
 require("tranquility.type")
 require("tranquility.event")
 
---- Create a pattern.
--- @type Class representing a pattern.
--- @tfield function query - The function that maps a {@link State} to an array of {@link Hap}.
+function P(pat)
+	print(Dump(pat))
+end
+
+function T(pat)
+	print(Dump(Type(pat)))
+end
+
 Pattern = {
 	_query = function(_)
 		return List:new()
@@ -48,23 +56,18 @@ function Pattern:query(state)
 	return self._query(state)
 end
 
----  Query haps inside the given time span.
---  @param {Fraction | number} begin from time
---  @param {Fraction | number} end to time
---  @returns Hap[]
---  @example
---  const pattern = sequence('a', ['b', 'c'])
---  const haps = pattern.queryArc(0, 1)
---  console.log(haps)
---  silence
+--- Query haps inside the given time span
+-- @param begin from time
+-- @param end to time
+-- @return Event
 function Pattern:queryArc(beginTime, endTime)
 	local span = TimeSpan:new(beginTime, endTime)
 	local state = State:new(span)
 	return self._query(state)
 end
 
---- Returns a new pattern, with all haps without onsets filtered out. A hap with an onset is one with a `whole` timespan that begins at the same time as its `part` timespan.
--- @returns Pattern
+--- Returns a new pattern, with all haps without onsets filtered out. A hap with an onset is one with a `whole` timespan that begins at the same time as its `part` timespan
+-- @return Pattern
 function Pattern:onsetsOnly()
 	return self:filterEvents(function(event)
 		return event:hasOnset()
@@ -72,8 +75,8 @@ function Pattern:onsetsOnly()
 end
 
 --- Returns a new Pattern, which only returns haps that meet the given test.
--- @param {Function} hap_test - a function which returns false for haps to be removed from the pattern
--- @returns Pattern
+-- @tparam function function which returns false for haps to be removed from the pattern
+-- @return Pattern
 function Pattern:filterEvents(filterFunc)
 	return Pattern:new(function(state)
 		return self._query(state):filter(filterFunc)
@@ -81,7 +84,7 @@ function Pattern:filterEvents(filterFunc)
 end
 
 --- Returns a new pattern, with queries split at cycle boundaries. This makes some calculations easier to express, as all haps are then constrained to happen within a cycle.
--- @returns Pattern
+-- @return Pattern
 function Pattern:splitQueries()
 	local function splitQuery(state)
 		return state
@@ -97,7 +100,7 @@ function Pattern:splitQueries()
 end
 
 --- Returns a new pattern, where the given function is applied to the query timespan before passing it to the original pattern.
---  @tparam {Function} func the function to apply
+--  @tparam Function function to apply
 --  @treturn Pattern
 function Pattern:withQuerySpan(func)
 	return Pattern:new(function(state)
@@ -106,8 +109,8 @@ function Pattern:withQuerySpan(func)
 end
 
 ---  As with {@link Pattern#withQuerySpan}, but the function is applied to both the begin and end time of the query timespan.
---  @param {Function} func the function to apply
---  @returns Pattern
+--  @tparam Function function to apply
+--  @return Pattern
 function Pattern:withQueryTime(func)
 	return Pattern:new(function(state)
 		return self._query(state:withSpan(function(span)
@@ -117,8 +120,8 @@ function Pattern:withQueryTime(func)
 end
 
 --- As with {@link Pattern#withHapSpan}, but the function is applied to both the begin and end time of the hap timespans.
--- @param {Function} func the function to apply
--- @returns Pattern
+-- @tparam Function func the function to apply
+-- @return Pattern
 function Pattern:withEventTime(func)
 	local query = function(state)
 		return self._query(state):map(function(event)
@@ -184,8 +187,7 @@ function Pattern:_patternify(method)
 	return patterned
 end
 
---- Returns a new pattern, with the function applied to the value of each event.
--- @synonyms fmap
+--- Returns a new pattern, with the function applied to the value of each event. synonyms fmap
 -- @tparam function func to apply to the value
 -- @treturn pattern
 function Pattern:withValue(func)
@@ -267,7 +269,6 @@ function Pure(value)
 	end
 	return Pattern:new(query)
 end
-
 --def _sequence_count(x):
 --    if type(x) == list or type(x) == tuple:
 --        if len(x) == 1:
@@ -284,6 +285,11 @@ function Reify(pat)
 	end
 	return pat
 end
+
+--- Concatenation: combines a list of patterns, switching between them successively, one per cycle. synonyms: {@link cat}
+--  @return {Pattern}
+--  @usage
+--  slowcat("e5", "b4", ["d5", "c5"])
 
 function Slowcat(pats)
 	pats = List:promote(pats)
@@ -327,7 +333,7 @@ function Silence()
 end
 
 --- Compress each cycle into the given timespan, leaving a gap
---   @example
+-- @usage
 --   cat(
 --     s("bd sd").compress(.25,.75),
 --     s("~ bd sd ~")
@@ -352,10 +358,10 @@ function Pattern:compress(b, e)
 end
 -- HACK: why fastgap returns stateful and context while compress donot
 
---- speeds up a pattern like fast, but rather than it playing multiple times as fast would it instead leaves a gap in the remaining space of the cycle. For example, the following will play the sound pattern "bd sn" only once but compressed into the first half of the cycle, i.e. twice as fast.
+--- speeds up a pattern like fast, but rather than it playing multiple times as fast would it instead leaves a gap in the remaining space of the cycle. For example, the following will play the sound pattern "bd sn" only once but compressed into the first half of the cycle, i.e. twice as fast. synonyms fastgap
+-- @tparam number factor of fast
 -- @name fastGap
--- @synonyms fastgap
--- @example
+-- @usage
 -- s("bd sd").fastGap(2)
 function Pattern:fastgap(factor)
 	if Type(factor) == "tranquility.Fraction" then

@@ -7,10 +7,9 @@ local unpack = table.unpack or _G.unpack
 --- turn parse trees into something useful
 -- performs a depth-first traversal of an AST
 -- simulates the NodeVisitor class from python module `parsimonious`
--- @type Visitor
 Visitor = {}
 
---- visit a node
+--- visit node
 -- @tparam table node
 -- @treturn table
 function Visitor:visit(node)

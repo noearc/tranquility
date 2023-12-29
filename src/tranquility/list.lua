@@ -14,7 +14,10 @@ Copyright (C) 2023 David Minnix
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]
---
+
+--- list.lua - <short description TODO>
+-- @module list
+
 require("tranquility.type")
 local function _length(list)
 	local len = 0
@@ -27,7 +30,7 @@ end
 local function _map(func, collection)
 	local mapped = {}
 	for key, value in pairs(collection) do
-		mapped[key] = func(value)
+		mapped[key] = func(value, key)
 	end
 	return mapped
 end
@@ -106,6 +109,14 @@ end
 
 function List:concat(l2)
 	return List:new(_listConcat(self._list, l2._list))
+end
+
+function List:fill(element, num)
+	num = num or 1
+	for _ = 1, num do
+		self:insert(element)
+	end
+	return self
 end
 
 function List:at(index)

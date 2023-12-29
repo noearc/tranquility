@@ -52,7 +52,6 @@ local other_subseqs = token("other", V("other_subseqs"))
 local other_elements = token("other", V("other_elements"))
 
 --- table of PEG grammar rules
--- @table grammar
 local grammar = lpeg.Ct(lpeg.C({
 	"root", -- initial rule, root
 	-- root

@@ -13,46 +13,49 @@ Copyright (C) 2023 David Minnix
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-]] --
+]]
+
+--- state.lua - <short description TODO>
+-- @module state
+
 require("math")
 require("table")
-require('tranquility/time_span')
-require('tranquility/compare_tables')
+require("tranquility/time_span")
+require("tranquility/compare_tables")
 
 State = { _span = TimeSpan:new(), _controls = {} }
 
 function State:create(o)
-    o = o or {}
-    setmetatable(o, self)
-    self.__index = self
-    return o
+	o = o or {}
+	setmetatable(o, self)
+	self.__index = self
+	return o
 end
 
 function State:span()
-    return self._span
+	return self._span
 end
 
 function State:new(span, controls)
-    return State:create { _span = span, _controls = controls }
+	return State:create({ _span = span, _controls = controls })
 end
 
 function State:type()
-    return "tranquility.State"
+	return "tranquility.State"
 end
 
 function State:setSpan(span)
-    return State:new(span, self._controls)
+	return State:new(span, self._controls)
 end
 
 function State:withSpan(func)
-    return self:setSpan(func(self._span))
+	return self:setSpan(func(self._span))
 end
 
 function State:setControls(controls)
-    return State:new(self._span, controls)
+	return State:new(self._span, controls)
 end
 
 function State:__eq(other)
-
-    return (self._span == other._span) and CompareTables(self._controls, other._controls)
+	return (self._span == other._span) and CompareTables(self._controls, other._controls)
 end

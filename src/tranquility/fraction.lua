@@ -14,7 +14,10 @@ Copyright (C) 2023 David Minnix
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]
---
+
+--- fraction.lua - <short description TODO>
+-- @module fraction
+
 require("math")
 require("tranquility.dump")
 -- this is a quick and dirty port of python's Fraction library pulling in only the things i need to get a first version working
@@ -374,6 +377,10 @@ function Fraction:max(other)
 	end
 end
 
+function Fraction:inverse()
+	return Fraction:new(self._denominator, self._numerator)
+end
+
 local function lcm(a, b)
 	-- Avoid division by zero
 	if a == 0 or b == 0 then
@@ -384,7 +391,6 @@ local function lcm(a, b)
 end
 
 function Fraction:gcd(otherFraction)
-	print(otherFraction)
 	local gcd_numerator = gcd(self:numerator(), otherFraction:numerator())
 	local lcm_denominator = lcm(self:denominator(), otherFraction:denominator())
 	return Fraction:new(gcd_numerator, lcm_denominator)
@@ -396,4 +402,10 @@ end
 
 function Fraction:show()
 	return self:__tostring()
+end
+
+function Gcd(list)
+	return list:reduce(function(acc, value)
+		return acc:gcd(value)
+	end, list:at(1))
 end

@@ -13,7 +13,11 @@ Copyright (C) 2023 David Minnix
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-]] --
+]]
+
+--- pattern_factory.lua - <short description TODO>
+-- @module pattern_factory
+
 require("tranquility.pattern")
 require("tranquility.link_clock")
 require("tranquility.stream")
@@ -22,19 +26,18 @@ Streams = {}
 DefaultClock = LinkClock:new()
 
 function P(key, pattern)
-    if not Streams[key] then
-        local stream = Stream:new()
-        DefaultClock:subscribe(stream)
-        Streams[key] = stream
-
-    end
-    Streams[key]._pattern = pattern
-    return pattern
+	if not Streams[key] then
+		local stream = Stream:new()
+		DefaultClock:subscribe(stream)
+		Streams[key] = stream
+	end
+	Streams[key]._pattern = pattern
+	return pattern
 end
 
 function Hush()
-    for _, stream in pairs(Streams) do
-        DefaultClock:unsubscribe(stream)
-    end
-    Streams = {}
+	for _, stream in pairs(Streams) do
+		DefaultClock:unsubscribe(stream)
+	end
+	Streams = {}
 end

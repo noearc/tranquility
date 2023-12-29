@@ -14,7 +14,9 @@ Copyright (C) 2023 David Minnix
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]
---
+
+--- event.lua - <short description TODO>
+-- @module event
 require("table")
 require("tranquility.compare_tables")
 require("tranquility.time_span")
