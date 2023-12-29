@@ -374,6 +374,22 @@ function Fraction:max(other)
 	end
 end
 
+local function lcm(a, b)
+	-- Avoid division by zero
+	if a == 0 or b == 0 then
+		return 0
+	end
+
+	return math.abs(a * b) / gcd(a, b)
+end
+
+function Fraction:gcd(otherFraction)
+	print(otherFraction)
+	local gcd_numerator = gcd(self:numerator(), otherFraction:numerator())
+	local lcm_denominator = lcm(self:denominator(), otherFraction:denominator())
+	return Fraction:new(gcd_numerator, lcm_denominator)
+end
+
 function Fraction:__tostring()
 	return string.format("%d/%d", self:numerator(), self:denominator())
 end

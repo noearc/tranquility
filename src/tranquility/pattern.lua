@@ -333,8 +333,12 @@ end
 --     s("~ bd sd ~")
 --   )
 function Pattern:compress(b, e)
-	_begin = Fraction:new(b)
-	_end = Fraction:new(e)
+	local _begin = b
+	local _end = e
+	if Type(b) ~= "tranquility.Fraction" then
+		_begin = Fraction:new(b)
+		_end = Fraction:new(e)
+	end
 	if
 		_begin > _end
 		or _end > Fraction:new(1)
@@ -374,8 +378,8 @@ function Pattern:fastgap(factor)
 		return TimeSpan:new(_begin, _end)
 	end
 
-	local function query(span)
-		span = span._span
+	local function query(state)
+		local span = state:span()
 		local new_span = TimeSpan:new(munge_query(span._begin), munge_query(span._end))
 		if new_span._begin == span._begin:nextSam() then
 			return {}
@@ -393,17 +397,22 @@ end
 function Stack(pats)
 	-- pile up patterns
 	local n_pats = List:new()
-	pats:foreach(function(pat)
+	pats:foreach(function(_, pat)
 		n_pats:insert(Reify(pat))
 	end)
-	local function query(span)
+	local function query(state)
 		local queries = List:new()
 		n_pats:foreach(function(_, pat)
-			queries:insert(pat:query(span))
+			P(pat:show())
+			-- P(Type(pat._query(span)))
+			-- local span = state:span()
+			queries:insert(pat:query(state))
+			-- P(Type(pat:query(state)))
 		end)
+		-- P(queries:flatten())
 		return queries:flatten()
 	end
-	return Pattern:new(query)
+	-- return Pattern:new(query)
 end
 
 function Timecat(time_pat_tuples)
@@ -428,15 +437,17 @@ function Timecat(time_pat_tuples)
 	end
 	local n_pats = List:new()
 	for _, tab in pairs(arranged) do
-		n_pats:insert(tab[3].compress(tab[1] / total, tab[2] / total))
+		n_pats:insert(tab[3]:compress(tab[1] / total, tab[2] / total))
 	end
+	-- P(n_pats._list)
 	return Stack(n_pats)
 end
 
-local actualEvents = Timecat({ { 3, Pure("bd"):fast(4) }, { 1, Pure("hh"):fast(8) } }):firstCycle()
+-- local actualEvents = Timecat({ { 3, Pure("bd"):fast(4) }, { 1, Pure("hh"):fast(8) } }):firstCycle()
+-- :firstCycle()
 
--- P(Type(actualEvents._list[1]))
-P(actualEvents._list[2])
+-- P(actualEvents)
+-- P(actualEvents._list[2])
 -- TODO:
 -- def polyrhythm(*xs):
 --     seqs = [sequence(x) for x in xs]
