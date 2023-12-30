@@ -15,7 +15,7 @@ Copyright (C) 2023 David Minnix
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]
 
---- defines the PEG grammar for parsing mini-notation
+--- pattern.lua
 -- @module pattern
 
 require("math")
